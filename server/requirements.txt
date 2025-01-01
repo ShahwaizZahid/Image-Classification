@@ -1,0 +1,13 @@
+Flask==3.1.0
+
+
+
+
+
+#  Virtual environment setup commands
+
+
+# pip install virtualenv
+# python -m venv myenv
+# virtualenv myenv
+# source myenv/bin/activate
