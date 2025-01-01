@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-# import util
+import utils
 
 app = Flask(__name__)
 
@@ -8,18 +8,13 @@ app = Flask(__name__)
 def classify_image():
     image_data = request.form['image_data']
 
-    response = jsonify(util.classify_image(image_data))
+    response = jsonify(utils.classify_image(image_data))
 
     response.headers.add('Access-Control-Allow-Origin', '*')
 
     return response
 
-
-@app.route('/hello', methods=['GET'])
-def hello():
-    return 'hello'
-
 if __name__ == "__main__":
-    # print("Starting Python Flask Server For Sports Celebrity Image Classification")
-    # util.load_saved_artifacts()
+    print("Starting Python Flask Server For Sports Celebrity Image Classification on port 5000")
+    utils.load_saved_artifacts()
     app.run(port=5000)
