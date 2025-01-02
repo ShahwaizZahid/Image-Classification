@@ -1,7 +1,7 @@
-import React from "react";
 import Navbar from "./components/Navbar";
 import CardsGrid from "./components/CardGrid";
 import Dropzone from "./Dropzone";
+import ScoreTable from "./components/ScoreTable";
 // import CardsGrid from "./components/CardsGrid";
 // import Dropzone from "./components/Dropzone";
 // import ScoreTable from "./components/ScoreTable";
@@ -31,7 +31,9 @@ const App = () => {
             Classify
           </button>
         </div>
-        <div className="col-span-8">{/* <ScoreTable scores={scores} /> */}</div>
+        <div className="col-span-8">
+          <ScoreTable scores={scores} />
+        </div>
       </div>
     </div>
   );
