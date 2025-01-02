@@ -7,7 +7,6 @@ from wavelet import w2d
 
 __class_name_to_number = {}
 __class_number_to_name = {}
-
 __model = None
 
 def classify_image(image_base64_data, file_path=None):
@@ -20,19 +19,24 @@ def classify_image(image_base64_data, file_path=None):
         scalled_img_har = cv2.resize(img_har, (32, 32))
         combined_img = np.vstack((scalled_raw_img.reshape(32 * 32 * 3, 1), scalled_img_har.reshape(32 * 32, 1)))
 
-        len_image_array = 32*32*3 + 32*32
+        len_image_array = 32 * 32 * 3 + 32 * 32
+        final = combined_img.reshape(1, len_image_array).astype(float)
 
-        final = combined_img.reshape(1,len_image_array).astype(float)
-        final = combined_img.reshape(1,len_image_array).astype(float)
-        result.append({
-                'class': class_number_to_name(__model.predict(final)[0]),
-                'class_probability': np.around(__model.predict_proba(final)*100,2).tolist()[0],
+        try:
+            prediction = __model.predict(final)
+            class_name = class_number_to_name(prediction[0])
+            class_probabilities = np.around(__model.predict_proba(final) * 100, 2).tolist()[0]
+            result.append({
+                'class': class_name,
+                'class_probability': class_probabilities,
                 'class_dictionary': __class_name_to_number
             })
-        return result
+        except Exception as e:
+            return {'error': str(e)}
+
+    return result
 
 def class_number_to_name(class_num):
-    print("as")
     return __class_number_to_name[class_num]
 
 def load_saved_artifacts():
@@ -49,7 +53,6 @@ def load_saved_artifacts():
         with open('./artifacts/saved_model.pkl', 'rb') as f:
             __model = joblib.load(f)
     print("loading saved artifacts...done")
-
 
 def get_cv2_image_from_base64_string(b64str):
     encoded_data = b64str.split(',')[1]
@@ -71,21 +74,13 @@ def get_cropped_image_if_2_eyes(image_path, image_base64_data):
 
     cropped_faces = []
     for (x,y,w,h) in faces:
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = img[y:y+h, x:x+w]
-            eyes = eye_cascade.detectMultiScale(roi_gray)
-            if len(eyes) >= 2:
-                cropped_faces.append(roi_color)
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_color = img[y:y+h, x:x+w]
+        eyes = eye_cascade.detectMultiScale(roi_gray)
+        if len(eyes) >= 2:
+            cropped_faces.append(roi_color)
     return cropped_faces
 
-def get_b64_test_image_for_virat():
-    with open("b64.txt") as f:
-        return f.read()
-
 if __name__ == '__main__':
-      load_saved_artifacts()
-
-    #   print(classify_image(get_b64_test_image_for_virat()))
-
-      print(classify_image(None, "./test_images/federer2.jpg"))
-     
+    load_saved_artifacts()
+    print(classify_image(None, "./test_images/virat2.jpg"))
