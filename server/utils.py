@@ -27,7 +27,7 @@ def classify_image(image_base64_data, file_path=None):
             class_name = class_number_to_name(prediction[0])
             class_probabilities = np.around(__model.predict_proba(final) * 100, 2).tolist()[0]
             result.append({
-                'class': class_name,
+                'class_name': class_name,
                 'class_probability': class_probabilities,
                 'class_dictionary': __class_name_to_number
             })
