@@ -95,19 +95,12 @@ const App = () => {
       <CardsGrid />
 
       {/* Dropzone and Table */}
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-4">
-          <Dropzone
-            onImageSelect={handleImageSelect}
-            onImageRemove={handleImageRemove} // Pass remove handler
-          />
-          <button
-            onClick={handleClassifyClick}
-            className="bg-green-500 text-white px-4 py-2 mt-4 rounded-md w-full"
-          >
-            Classify
-          </button>
-        </div>
+      <div className="col-span-4 flex justify-center items-center">
+        {" "}
+        <Dropzone
+          onImageSelect={handleImageSelect}
+          onImageRemove={handleImageRemove} // Pass remove handler
+        />
       </div>
 
       {/* Display Classification Result */}

@@ -37,7 +37,7 @@ const Dropzone = ({ onImageSelect, onImageRemove }: DropzoneProps) => {
           <img
             src={URL.createObjectURL(selectedImage)}
             alt="Uploaded"
-            className="w-32 h-32 rounded-md object-cover"
+            className="w-36 h-36 rounded-md object-cover"
           />
           {/* Remove button */}
           <button
