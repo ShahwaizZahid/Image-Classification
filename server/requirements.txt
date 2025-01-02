@@ -4,8 +4,8 @@ numpy==2.2.1
 opencv-python==4.10.0.84
 PyWavelets==1.8.0
 scikit-learn==1.6.0
-
-
+uvicorn==0.34.0
+Flask-Cors==5.0.0
 
 #  Virtual environment setup commands
 
