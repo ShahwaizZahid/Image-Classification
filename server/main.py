@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify # type: ignore
 import utils
 
 app = Flask(__name__)
@@ -15,6 +15,9 @@ def classify_image():
     return response
 
 if __name__ == "__main__":
+
     print("Starting Python Flask Server For Sports Celebrity Image Classification on port 5000")
+    
     utils.load_saved_artifacts()
+
     app.run(port=5000)
