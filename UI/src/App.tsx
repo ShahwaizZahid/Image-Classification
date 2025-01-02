@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import Navbar from "./components/Navbar";
+import CardsGrid from "./components/CardGrid";
+import Dropzone from "./Dropzone";
+// import CardsGrid from "./components/CardsGrid";
+// import Dropzone from "./components/Dropzone";
+// import ScoreTable from "./components/ScoreTable";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const scores = [
+    { player: "Lionel Messi", score: 0.4 },
+    { player: "Maria Sharapova", score: 0.2 },
+    { player: "Roger Federer", score: 0.11 },
+    { player: "Serena Williams", score: 0.07 },
+    { player: "Virat Kohli", score: 99.22 },
+  ];
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="min-h-screen bg-gray-100 p-4">
+      {/* Navbar */}
+      <Navbar />
 
-export default App
+      {/* Cards Grid */}
+      <CardsGrid />
+
+      {/* Dropzone and Table */}
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-4">
+          <Dropzone />
+          <button className="bg-green-500 text-white px-4 py-2 mt-4 rounded-md w-full">
+            Classify
+          </button>
+        </div>
+        <div className="col-span-8">{/* <ScoreTable scores={scores} /> */}</div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
