@@ -1,11 +1,12 @@
-from flask import Flask, request, jsonify # type: ignore
+import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import utils
-from flask_cors import CORS # type: ignore
 
 app = Flask(__name__)
 
-# Enable CORS to allow the React frontend to communicate with the Flask server
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+# Enable CORS for specific origin
+CORS(app, resources={r"/*": {"origins": os.getenv('CORS_ORIGIN')}})
 
 @app.route('/hi', methods=['GET'])
 def hello():
@@ -14,33 +15,23 @@ def hello():
 @app.route('/classify_image', methods=['POST'])
 def classify_image():
     try:
-        # Extract image data from the JSON body
-        data = request.json  # This expects a JSON body
+        data = request.json
         image_data = data.get('image_data')
 
         if not image_data:
             return jsonify({'error': 'No image data provided'}), 400
 
-        # Classify the image using utils
         result = utils.classify_image(image_data)
-
-        # Print the result in the terminal (before returning it)
         print("Classification Result:", result)
-
-        # Return the result as a JSON response
-        response = jsonify(result)
-        response.headers.add('Access-Control-Allow-Origin', '*')  # Add CORS headers
-        return response
-
+        return jsonify(result)
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
 
 
 if __name__ == "__main__":
-
-    print("Starting Python Flask Server For Sports Celebrity Image Classification on port 5000")
+    print("Starting Python Flask Server For Sports Celebrity Image Classification")
     
-    utils.load_saved_artifacts()  # Load pre-trained model and dictionary
-
-    app.run(debug=True, port=5000)
+    # Use an environment variable for sensitive initialization, if needed
+    utils.load_saved_artifacts()
+    app.run(debug=True, port=int(os.getenv("FLASK_PORT")))
