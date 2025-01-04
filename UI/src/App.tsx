@@ -4,6 +4,8 @@ import Dropzone from "./components/Dropzone";
 import ScoreTable from "./components/ScoreTable";
 import axios from "axios";
 import { useState } from "react";
+import Card from "./components/Card";
+import { players } from "./components/CardGrid";
 
 const App = () => {
   const [imageData, setImageData] = useState<string | null>(null); // Store the base64 image data
@@ -13,7 +15,12 @@ const App = () => {
     null
   );
   const [classDictionary, setClassDictionary] = useState<string | null>(null);
-
+  const [matchPlayerData, setMatchPlayerData] = useState<{
+    name: string;
+    imgSrc: string;
+    dataPlayer: string;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   // Player names to map against the classification probabilities
   const playerNames = [
     "Virat Kohli",
@@ -54,6 +61,14 @@ const App = () => {
       .then((response) => {
         console.log("Raw response data:", response.data); // Log the raw response
 
+        // Check if the response is valid and has at least one entry
+        if (!Array.isArray(response.data) || response.data.length === 0) {
+          console.error("Invalid response: No classification data received.");
+          setClassificationResult([]); // Clear the classification result
+          setMatchPlayerData(null); // Clear matched player data
+          return;
+        }
+
         // Access the first element in the response array
         const responseData = response.data[0];
 
@@ -65,18 +80,27 @@ const App = () => {
           Array.isArray(class_probability) &&
           class_probability.length === 5
         ) {
-          // Format the scores for display
           const formattedScores = playerNames.map((player) => ({
             player,
             score:
               class_probability[class_dictionary[player]]?.toFixed(2) || "N/A",
           }));
 
-          // Update state with the classification result
           setClassificationResult(formattedScores);
-          setClassName(class_name); // Set the class name
-          setClassProbability(class_probability); // Join the probabilities as a string
-          setClassDictionary(JSON.stringify(class_dictionary)); // Convert class_dictionary to a string
+          setClassName(class_name);
+          setClassProbability(class_probability);
+          setClassDictionary(JSON.stringify(class_dictionary));
+
+          const matchedPlayer = players.find(
+            (p) => p.dataPlayer === class_name
+          );
+          if (matchedPlayer) {
+            console.log("Matched Player:", matchedPlayer);
+            setMatchPlayerData(matchedPlayer);
+          } else {
+            console.log("No matching player found.");
+            setMatchPlayerData(null);
+          }
         } else {
           console.error("Invalid class_probability data:", class_probability);
         }
@@ -93,14 +117,38 @@ const App = () => {
 
       {/* Cards Grid */}
       <CardsGrid />
+      <div className="flex justify-center items-center">
+        {/* Dropzone and Table */}
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-4">
+            <Dropzone
+              onImageSelect={handleImageSelect}
+              onImageRemove={handleImageRemove} // Pass remove handler
+            />
 
-      {/* Dropzone and Table */}
-      <div className="col-span-4 flex justify-center items-center">
-        {" "}
-        <Dropzone
-          onImageSelect={handleImageSelect}
-          onImageRemove={handleImageRemove} // Pass remove handler
-        />
+            {isLoading ? (
+              <button className="bg-red-500 text-white px-4 py-2 mt-4 rounded-md w-full">
+                Classifying...
+              </button>
+            ) : (
+              <button
+                onClick={handleClassifyClick}
+                className="bg-green-500 text-white px-4 py-2 mt-4 rounded-md w-full"
+              >
+                Classify
+              </button>
+            )}
+          </div>
+        </div>
+        {matchPlayerData && (
+          <div>
+            <Card
+              name={matchPlayerData.name}
+              imgSrc={matchPlayerData.imgSrc}
+              dataPlayer={matchPlayerData.dataPlayer}
+            ></Card>
+          </div>
+        )}
       </div>
 
       {/* Display Classification Result */}
