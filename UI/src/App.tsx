@@ -6,7 +6,7 @@ import axios from "axios";
 import { useState } from "react";
 import Card from "./components/Card";
 import { players } from "./components/CardGrid";
-
+import { apiUrl } from "./config";
 const App = () => {
   const [imageData, setImageData] = useState<string | null>(null);
   const [classificationResult, setClassificationResult] = useState<any>(null);
@@ -54,7 +54,7 @@ const App = () => {
 
     axios
       .post(
-        "http://localhost:5000/classify_image",
+        `${apiUrl}/classify_image`,
         { image_data: imageData },
         { headers: { "Content-Type": "application/json" } }
       )
