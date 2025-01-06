@@ -1,6 +1,6 @@
 # Image-Classification
 
-![](ui_snapshot.jpg)
+![](ui_snapshot.png)
 
 In this data science and machine learning project, we classify sports personalities. We restrict classification to only 5 people,
 
