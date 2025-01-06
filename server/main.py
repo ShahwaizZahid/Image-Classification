@@ -8,10 +8,6 @@ app = Flask(__name__)
 # Enable CORS for specific origin
 CORS(app, resources={r"/*": {"origins": os.getenv('CORS_ORIGIN')}})
 
-@app.route('/hi', methods=['GET'])
-def hello():
-    return 'hi ja parawar ke ahaas'
-
 @app.route('/classify_image', methods=['POST'])
 def classify_image():
     try:
@@ -34,4 +30,4 @@ if __name__ == "__main__":
     
     # Use an environment variable for sensitive initialization, if needed
     utils.load_saved_artifacts()
-    app.run(debug=True, port=int(os.getenv("FLASK_PORT")))
+    app.run(debug=True, port=int(os.getenv("FLASK_PORT", 5000)))
