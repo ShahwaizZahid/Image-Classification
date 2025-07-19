@@ -7,9 +7,17 @@ import { useState } from "react";
 import Card from "./components/Card";
 import { players } from "./components/CardGrid";
 import { apiUrl } from "./config";
+
+type ClassiferProps = {
+  player: string;
+  score: string;
+};
+
 const App = () => {
   const [imageData, setImageData] = useState<string | null>(null);
-  const [classificationResult, setClassificationResult] = useState<any>(null);
+  const [classificationResult, setClassificationResult] = useState<
+    ClassiferProps[] | null
+  >(null);
   const [className, setClassName] = useState<string | null>(null);
   const [classProbability, setClassProbability] = useState<number[] | null>(
     null
@@ -62,9 +70,7 @@ const App = () => {
         console.log("Raw response data:", response.data);
 
         if (!Array.isArray(response.data) || response.data.length === 0) {
-          setError(
-            "No classification data received. Please try another image."
-          );
+          setError("Image not classified. Please try another image.");
           setClassificationResult(null);
           setMatchPlayerData(null);
           return;
@@ -128,8 +134,9 @@ const App = () => {
               </button>
             ) : (
               <button
+                disabled={!imageData}
                 onClick={handleClassifyClick}
-                className="bg-green-500 text-white px-4 py-2 mt-4 rounded-md w-full"
+                className="bg-green-500 disabled:bg-green-300 disabled:cursor-not-allowed text-white px-4 py-2 mt-4 rounded-md w-full"
               >
                 Classify
               </button>
@@ -144,8 +151,8 @@ const App = () => {
           />
         ) : (
           error && (
-            <div className="mt-4 text-red-500 text-center">
-              {error}, No match the image following celebrities
+            <div className="mt-4 p-4 border border-red-400 bg-red-100 text-red-700 rounded-md text-center">
+              ❌ {error}
             </div>
           )
         )}
