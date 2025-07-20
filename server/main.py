@@ -28,6 +28,5 @@ def classify_image():
 if __name__ == "__main__":
     print("Starting Python Flask Server For Sports Celebrity Image Classification")
     
-    # Use an environment variable for sensitive initialization, if needed
     utils.load_saved_artifacts()
     app.run(debug=True, port=int(os.getenv("FLASK_PORT", 5000)))
